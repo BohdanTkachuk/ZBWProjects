@@ -4,7 +4,8 @@ import pandas as pd
 
 # TODO seems like the data is broken. It was skipped some of lines because of wrong separotor, Error tokenizing data. C error: Expected 25 fields in line 28, saw 26
 #filename = "altmetricsdataset_30journals_test.csv"
-filename = "altmetricsdataset_30journals.csv"
+#filename = "altmetricsdataset_30journals.csv"
+filename = "tbl_altmetrics_top10lowest.csv"
 seperator = ","
 
 #TODO I don't like this step. For each symbol we do this check (possible to put this check into one case where we close )
@@ -80,22 +81,37 @@ def readcsv(filename, seperator):
     # Control delimiters, rows, column names with read_csv (see later)
 
     return data
+def readcsvBetterWay (filename):
+    data = pd.read_csv(filename, keep_default_na=False);
+    return data
 
 
-def connectiondb():
+def connectiondb(data):
     try:
         connection = mysql.connector.connect(host='localhost',
-                                             database='ZBWData',
+                                             database='ZBW',
                                              user='root',
                                              password='qweqweqwe')
         #  "hey it's me" "it/"s" "" " ""
         if connection.is_connected():
             db_Info = connection.get_server_info()
             print("Connected to MySQL Server version ", db_Info)
+
+
             cursor = connection.cursor()
-            cursor.execute("select database();")
-            record = cursor.fetchone()
-            print("You're connected to database: ", record)
+
+            cols = "`,`".join([str(i) for i in data.columns.tolist()])
+
+            for i, row in data.iterrows():
+                sql = "INSERT INTO `altmetrics_10bottom` (`" + cols + "`) VALUES (" + "%s," * (len(row) - 1) + "%s)"
+                cursor.execute(sql, tuple(row))
+
+                # the connection is not autocommitted by default, so we must commit to save our changes
+                connection.commit()
+
+
+
+
 
     except Error as e:
         print("Error while connecting to MySQL", e)
@@ -106,17 +122,11 @@ def connectiondb():
             print("MySQL connection is closed")
 
 
-data = readcsv(filename, seperator)
-
-
-#test = pd.DataFrame(['qwe', "qwe", "qwe"]);
-#test2 = pd.DataFrame(['rty', "yui", "zxc"]);
-#final = test.append(test2, ignore_index = True)
-#print(final)
-
-
+data = readcsvBetterWay(filename)
+#print(data.to_string())
 # with open(filename) as f:
 #    len_csv = sum(1 for line in f)
 # number_of_skipped_rows = len_csv - len(data)
-# print(data.head())
+#print(data.head())
 #data.to_csv('result.csv')
+connectiondb(data);

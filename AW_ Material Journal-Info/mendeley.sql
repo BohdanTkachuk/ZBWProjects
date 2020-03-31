@@ -23,14 +23,14 @@ CREATE TABLE `tbl_doi` (
 DROP TABLE IF EXISTS `tbl_reader_count_academic_status`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_reader_count_academic_status` (
+CREATE TABLE `tbl_reader_count_academic_status_bottom30` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `id_doi` int(11) NOT NULL,
   `status` varchar(100) NOT NULL DEFAULT '',
   `count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_index` (`id_doi`,`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=2893968 DEFAULT CHARSET=utf8;
+); ENGINE=InnoDB AUTO_INCREMENT=2893968 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -57,15 +57,23 @@ CREATE TABLE `tbl_reader_count_country` (
 DROP TABLE IF EXISTS `tbl_reader_count_subdiscipline`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_reader_count_subdiscipline` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+CREATE TABLE `tbl_reader_count_subdiscipline_top30` (
+  `id` int(11) NOT NULL,
   `id_doi` int(11) DEFAULT NULL,
-  `category` varchar(100) NOT NULL DEFAULT '',
-  `discipline` varchar(150) NOT NULL DEFAULT '',
-  `count` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_index` (`id_doi`,`category`,`discipline`)
-) ENGINE=InnoDB AUTO_INCREMENT=2446739 DEFAULT CHARSET=utf8;
+  `category` varchar(100)  DEFAULT '',
+  `discipline` varchar(150) DEFAULT '',
+  `number_1` int(11) DEFAULT NULL,
+  `number_2` int(11) DEFAULT NULL,
+  `link` varchar(150)  DEFAULT '',
+   `number_3` int(11) DEFAULT NULL,
+   `years` int(11) DEFAULT NULL,
+   `online_issn` varchar(150) DEFAULT '',
+   `article_name` varchar(1500) DEFAULT '',
+   `publisher` varchar(150)  DEFAULT '',
+   `bwl` varchar(150)  DEFAULT '',
+  PRIMARY KEY (`id`)
+
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
